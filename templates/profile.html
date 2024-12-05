@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Home</title>
+  <link rel="stylesheet" href="static/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to the App - {{current_user.Name}}</h1>
+
+    <h3>Your Matched Requests</h3>
+    {% if not matchlist %}
+        <p>No Current Matches</p>
+    {% else %}
+        <ul>
+        {% for match in matchlist %}
+            <li><p>Matched with {{Users.query.filter_by(Phone=match.Phone).first().Name}} Number: {{match.Phone}}</p></li>    
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <br>
+    <a href="/">Request</a>
+    <br>
+    <a href="/logout">Logout</a>
+    <br>
+  </div>
+</body>
+</html>
