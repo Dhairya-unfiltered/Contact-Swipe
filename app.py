@@ -1,5 +1,5 @@
 from flask import Flask
-from extensions import db, migrate, bcrypt, jwt, cors, login_manager
+from extensions import db, bcrypt, login_manager
 from admin import setup_admin
 from routes import routes_bp
 
@@ -15,10 +15,7 @@ app.config["API_BASE_URL"] = "http://localhost:5001"
 
 
 db.init_app(app)
-migrate.init_app(app, db)
 bcrypt.init_app(app)
-jwt.init_app(app)
-cors.init_app(app)
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 

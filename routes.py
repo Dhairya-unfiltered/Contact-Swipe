@@ -20,13 +20,16 @@ from flask_login import login_user, logout_user, current_user
 
 routes_bp = Blueprint("routes", __name__)
 
+
+reciprocal=0
+
 @routes_bp.route('/')
 def home():
     if not current_user.is_authenticated:
         return redirect("/login")
     
 
-    return render_template("index.html", current_user=current_user)
+    return render_template("index.html", current_user=current_user,reciprocal=reciprocal)
 
 @routes_bp.route('/profile')
 def profile():
@@ -111,6 +114,7 @@ def logout():
 @routes_bp.route('/request', methods=['POST'])
 def create_request():
     from app import db, bcrypt
+    global reciprocal
     
     mobile = request.form['username']
 
@@ -124,6 +128,17 @@ def create_request():
         try:
             db.session.add(new_request)
             db.session.commit()
+
+            check = Users.query.filter_by(Phone=mobile).first()
+            if check:
+                reciprocal_match = Request.query.filter_by(Phone=current_user.Phone, Created_by=check.User_ID).first()
+                if reciprocal_match:
+                    reciprocal=1
+                else:
+                    reciprocal=0
+            else:
+                reciprocal=0
+
             return redirect('/')
         except IntegrityError:
             db.session.rollback()
